@@ -1,0 +1,39 @@
+{
+    "env": {
+        "cubemx_includes": [
+            "Core/Inc",
+            "../../Repository/STM32Cube_FW_H7_V1.5.0/Drivers/STM32H7xx_HAL_Driver/Inc",
+            "../../Repository/STM32Cube_FW_H7_V1.5.0/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy",
+            "../../Repository/STM32Cube_FW_H7_V1.5.0/Drivers/CMSIS/Device/ST/STM32H7xx/Include",
+            "../../Repository/STM32Cube_FW_H7_V1.5.0/Drivers/CMSIS/Include"
+        ],
+        "cubemx_defines": [
+            "USE_HAL_DRIVER",
+            "STM32H743xx"
+        ]
+    },
+    "configurations": [
+        {
+            "name": "target",
+            "includePath": [
+                "${default}",
+                "${cubemx_includes}"
+            ],
+            "browse": {
+                "path": [
+                    "${default}",
+                    "${cubemx_includes}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "defines": [
+                "${default}",
+                "${cubemx_defines}"
+            ],
+            "compilerPath": "${default}",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}

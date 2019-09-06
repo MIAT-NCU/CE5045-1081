@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Cortex debug",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "cwd": "${workspaceFolder}",
+            "executable": "../../build/target.elf",
+            "showDevDebugOutput": true,
+            "configFiles": [
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/target/stm32h7x_dual_bank.cfg"
+            ],
+            "preLaunchTask": "Build project"
+        },
+        {
+            "name": "Debug current Python file",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        }
+    ]
+}

@@ -1,0 +1,135 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build project",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "type": "shell",
+            "command": "/usr/bin/make",
+            "args": [
+                "-C",
+                "../../",
+                "GCC_PATH=/usr/local/Cellar/arm-none-eabi-gcc/8-2018-q4-major/gcc/bin",
+                "-j8"
+            ],
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            },
+            "presentation": {
+                "focus": true
+            }
+        },
+        {
+            "label": "Delete build folder",
+            "type": "shell",
+            "command": "/usr/bin/make",
+            "args": [
+                "-C",
+                "../../",
+                "clean"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "focus": false
+            }
+        },
+        {
+            "label": "CPU: Build, Download and run",
+            "type": "shell",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd",
+            "args": [
+                "-f",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
+                "-f",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/target/stm32h7x_dual_bank.cfg",
+                "-c",
+                "program ../../build/target.elf verify reset exit"
+            ],
+            "problemMatcher": [],
+            "dependsOn": "Build project"
+        },
+        {
+            "label": "CPU: Download and run",
+            "type": "shell",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd",
+            "args": [
+                "-f",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
+                "-f",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/target/stm32h7x_dual_bank.cfg",
+                "-c",
+                "program ../../build/target.elf verify reset exit"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "CPU: Reset and run",
+            "type": "shell",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd",
+            "args": [
+                "-f",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
+                "-f",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/target/stm32h7x_dual_bank.cfg",
+                "-c init",
+                "-c reset",
+                "-c exit"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "CPU: Halt",
+            "type": "shell",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd",
+            "args": [
+                "-f",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
+                "-f",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/target/stm32h7x_dual_bank.cfg",
+                "-c init",
+                "-c halt",
+                "-c exit"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "CPU: Run",
+            "type": "shell",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd",
+            "args": [
+                "-f",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
+                "-f",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/target/stm32h7x_dual_bank.cfg",
+                "-c init",
+                "-c resume",
+                "-c exit"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Open CubeMX project",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "${workspaceFolder}/../../scripts/openCubeMX.py"
+            ],
+            "presentation": {
+                "focus": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
