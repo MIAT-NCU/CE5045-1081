@@ -35,6 +35,25 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
+typedef enum
+{
+  notChange = 0,
+  isChanged,
+}
+btnChang_t;
+
+typedef enum
+{
+  buttonUp = 0,
+  buttonDown,
+}
+btnSt_t;
+
+typedef struct{
+  btnChang_t isChange;
+  btnSt_t state;
+} buttonState_t;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -96,6 +115,47 @@ double getSensorReading(){
   return value;
 }
 
+/**
+  * @brief 捕捉按鈕的變化及狀態
+  * @retval 按鈕的變化及狀態
+  */
+buttonState_t getButtonState(){
+  static GPIO_PinState prevState = 3;
+  buttonState_t result = {
+    notChange,
+    buttonUp
+  };
+
+  GPIO_PinState newState = HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin);
+  result.state = (btnSt_t) newState;
+
+  if(prevState != newState && prevState != 3){
+    result.isChange = isChanged;
+  }
+
+  prevState = newState;
+  return result;
+}
+
+/**
+  * @brief 回報按鈕變化及狀態
+  * @btnSt 按鈕狀態 
+  * @retval None
+  */
+void reportButtonState(buttonState_t btnSt){
+  switch(btnSt.state){
+    case(buttonDown):
+      printf("Button pressed!\r\n");
+      break;
+    case(buttonUp):
+      printf("Button released!\r\n");
+      break;
+    default:
+      printf("Button Exception occured!!!!!!!!!!\r\n");
+      break;
+  }
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -140,17 +200,34 @@ int main(void)
 
   uint8_t msgCounter=0;
   uint8_t ld1Counter=0;
-
+  uint16_t msgPauseRemaining = 0;
+  
   while (1)
   {
-    if(msgCounter++>100){
-      msgCounter=0;
-      printf("Sensor Readings : % 2.2f \r\n", getSensorReading() );
+    //回報感應器讀值
+    if(msgPauseRemaining>0){
+      msgPauseRemaining--;
+    }else{
+      if(msgCounter++>50){
+        msgCounter=0;
+        printf("Sensor Readings : % 2.2f \r\n", getSensorReading() );
+      }
     }
+
+    //閃爍LED燈
     if(ld1Counter++>20){
       ld1Counter=0;
       HAL_GPIO_TogglePin(LD2_GPIO_Port,LD2_Pin);
     }
+
+    //按鈕狀態判斷及回報
+    buttonState_t btnState = getButtonState();
+    if(btnState.isChange == isChanged){
+      msgPauseRemaining = 100;
+      HAL_GPIO_WritePin( LD3_GPIO_Port, LD3_Pin, (GPIO_PinState) btnState.state);
+      reportButtonState(btnState);
+    }
+
     HAL_Delay(10);
 
     /* USER CODE END WHILE */
