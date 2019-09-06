@@ -76,6 +76,26 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+/**
+  * @brief 回傳一個介於0.5~-0.5的變化量
+  * @retval 變化量
+  */
+double sensorVariation(){
+  double inc = rand();
+  inc = (inc / RAND_MAX) - 0.5;
+  return inc;
+}
+
+/**
+  * @brief 讀取感應器數值
+  * @retval 數值
+  */
+double getSensorReading(){
+  static double value = 0;
+  value += sensorVariation();
+  return value;
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -118,18 +138,20 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   printf("Hello World~~\r\n");
 
-  double someImportantReading = 0;
-  double newValue = 0;
-  uint16_t iter = 0;
-  double inc;
+  uint8_t msgCounter=0;
+  uint8_t ld1Counter=0;
+
   while (1)
   {
-    inc = rand();
-    inc = (inc / RAND_MAX) - 0.5;
-    newValue = someImportantReading + inc;
-    printf("Reading changes(%d) from  % 2.2f  to  % 2.2f \r\n",iter++,someImportantReading,newValue);
-    someImportantReading = newValue;
-    HAL_Delay(1000);
+    if(msgCounter++>100){
+      msgCounter=0;
+      printf("Sensor Readings : % 2.2f \r\n", getSensorReading() );
+    }
+    if(ld1Counter++>20){
+      ld1Counter=0;
+      HAL_GPIO_TogglePin(LD2_GPIO_Port,LD2_Pin);
+    }
+    HAL_Delay(10);
 
     /* USER CODE END WHILE */
 
