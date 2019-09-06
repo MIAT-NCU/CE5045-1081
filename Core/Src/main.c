@@ -28,6 +28,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
+#include <stdlib.h>
 
 /* USER CODE END Includes */
 
@@ -115,8 +116,21 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  printf("Hello World~~\r\n");
+
+  double someImportantReading = 0;
+  double newValue = 0;
+  uint16_t iter = 0;
+  double inc;
   while (1)
   {
+    inc = rand();
+    inc = (inc / RAND_MAX) - 0.5;
+    newValue = someImportantReading + inc;
+    printf("Reading changes(%d) from  % 2.2f  to  % 2.2f \r\n",iter++,someImportantReading,newValue);
+    someImportantReading = newValue;
+    HAL_Delay(1000);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
