@@ -27,6 +27,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
 
 /* USER CODE END Includes */
 
@@ -37,6 +38,20 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
+asm(".global _printf_float"); //for the float supporting of printf
+
+#ifdef __GNUC__
+int __io_putchars(char *ptr, int len){
+  HAL_UART_Transmit(&huart3, (uint8_t *)ptr, len,0xFFFF);
+  return len;
+}
+#else
+int fputc(int ch, FILE *f){
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1,0xFFFF);
+  return ch;
+}
+#endif /* __GNUC__ */
 
 /* USER CODE END PD */
 
@@ -71,7 +86,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
-  
+
 
   /* MCU Configuration--------------------------------------------------------*/
 

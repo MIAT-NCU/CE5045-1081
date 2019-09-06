@@ -44,6 +44,7 @@ Core/Src/gpio.c \
 Core/Src/eth.c \
 Core/Src/usart.c \
 Core/Src/usb_otg.c \
+Core/Src/syscalls.c \
 ../../Repository/STM32Cube_FW_H7_V1.5.0/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c \
 ../../Repository/STM32Cube_FW_H7_V1.5.0/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_eth.c \
 ../../Repository/STM32Cube_FW_H7_V1.5.0/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_eth_ex.c \
