@@ -8,6 +8,7 @@
             "servertype": "openocd",
             "cwd": "${workspaceFolder}",
             "executable": "../../build/target.elf",
+            "svdFile": "../../../../SVD/STM32H743x.svd",
             "showDevDebugOutput": true,
             "configFiles": [
                 "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
