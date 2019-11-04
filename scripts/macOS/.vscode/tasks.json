@@ -48,10 +48,10 @@
         {
             "label": "CPU: Build, Download and run",
             "type": "shell",
-            "command": "${workspaceFolder}/../../../../toolchain/openocd/HEAD-382f4f0/bin/openocd",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd",
             "args": [
                 "-s",
-                "${workspaceFolder}/../../../../toolchain/openocd/HEAD-382f4f0/scripts",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts",
                 "-f",
                 "interface/stlink.cfg",
                 "-f",
@@ -65,10 +65,10 @@
         {
             "label": "CPU: Download and run",
             "type": "shell",
-            "command": "${workspaceFolder}/../../../../toolchain/openocd/HEAD-382f4f0/bin/openocd",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd",
             "args": [
                 "-s",
-                "${workspaceFolder}/../../../../toolchain/openocd/HEAD-382f4f0/scripts",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts",
                 "-f",
                 "interface/stlink.cfg",
                 "-f",
@@ -81,10 +81,10 @@
         {
             "label": "CPU: Reset and run",
             "type": "shell",
-            "command": "${workspaceFolder}/../../../../toolchain/openocd/HEAD-382f4f0/bin/openocd",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd",
             "args": [
                 "-s",
-                "${workspaceFolder}/../../../../toolchain/openocd/HEAD-382f4f0/scripts",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts",
                 "-f",
                 "interface/stlink.cfg",
                 "-f",
@@ -98,10 +98,10 @@
         {
             "label": "CPU: Halt",
             "type": "shell",
-            "command": "${workspaceFolder}/../../../../toolchain/openocd/HEAD-382f4f0/bin/openocd",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd",
             "args": [
                 "-s",
-                "${workspaceFolder}/../../../../toolchain/openocd/HEAD-382f4f0/scripts",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts",
                 "-f",
                 "interface/stlink.cfg",
                 "-f",
@@ -115,10 +115,10 @@
         {
             "label": "CPU: Run",
             "type": "shell",
-            "command": "${workspaceFolder}/../../../../toolchain/openocd/HEAD-382f4f0/bin/openocd",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd",
             "args": [
                 "-s",
-                "${workspaceFolder}/../../../../toolchain/openocd/HEAD-382f4f0/scripts",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts",
                 "-f",
                 "interface/stlink.cfg",
                 "-f",

@@ -76,29 +76,6 @@ int fputc(int ch, FILE *f){
 }
 #endif /* __GNUC__ */
 
-void connecting_MPU_9255(MPU_9255_t *nmpu){
-	// Read WHO_AM_I register for MPU-9255
-  while(1){
-    uint8_t who = MPU_9255_whoami(nmpu); 
-    
-    if (who == 0x73) // WHO_AM_I should always be 0x73
-    {  
-      printf("MPU9255 WHO_AM_I is 0x%x\n\r", who);
-      printf("MPU9255 is online...\n\r");
-      HAL_Delay(1000);
-      
-      MPU_9255_initSensor(nmpu);
-      MPU_9255_printInfo(nmpu);
-      break;
-    }
-    else
-    {
-      printf("Could not connect to MPU9255: \n\r");
-      printf("%#x \n",  who);
-      HAL_Delay(1000);
-    }
-  }
-}
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -121,19 +98,64 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-//覆寫MPU9255的延時函數
+/**
+  * @brief 覆寫MPU9255的延時函數， MPU_9255_delay 為一弱函式
+  * @ms 延時時間
+  * @retval 無
+  */
 void MPU_9255_delay(uint32_t ms){
   HAL_Delay(ms);
 }
 
-//定義MPU9255的i2c讀指令
+/**
+  * @brief 在初始化 MPU9255 instance時所需要提供的 i2c 讀指令
+  * @DevAddress i2c地址
+  * @pData 資料
+  * @size 資料長度
+  * @retval i2c寫入結果狀態
+  */
 uint8_t nmpu1_i2c_read(uint16_t DevAddress, uint8_t *pData, uint16_t size){
   return HAL_I2C_Master_Receive(&hi2c1, DevAddress, pData, size, 100);
 }
 
-//定義MPU9255的i2c寫指令
+/**
+  * @brief 在初始化 MPU9255 instance時所需要提供的 i2c 寫指令
+  * @DevAddress i2c地址
+  * @pData 資料
+  * @size 資料長度
+  * @retval i2c寫入結果狀態
+  */
 uint8_t nmpu1_i2c_write(uint16_t DevAddress, uint8_t *pData, uint16_t size){
   return HAL_I2C_Master_Transmit(&hi2c1, DevAddress, pData, size, 100);
+}
+
+/**
+  * @brief MPU＿9255 連線成功後繼續，blocking
+  * @nmpu MPU_9255的副本
+  * @retval none
+  */
+void connecting_MPU_9255(MPU_9255_t *nmpu){
+	// Read WHO_AM_I register for MPU-9255
+  while(1){
+    uint8_t who = MPU_9255_whoami(nmpu); 
+    
+    if (who == 0x73) // WHO_AM_I should always be 0x73
+    {  
+      printf("MPU9255 WHO_AM_I is 0x%x\n\r", who);
+      printf("MPU9255 is online...\n\r");
+      HAL_Delay(1000);
+      
+      MPU_9255_initSensor(nmpu);
+      MPU_9255_printInfo(nmpu);
+      break;
+    }
+    else
+    {
+      printf("Could not connect to MPU9255: \n\r");
+      printf("%#x \n",  who);
+      HAL_Delay(1000);
+    }
+  }
 }
 
 /* USER CODE END 0 */
@@ -173,7 +195,7 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim3);
-  
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -194,21 +216,26 @@ int main(void)
   connecting_MPU_9255(nmpu);
 
   double ax, ay, az, gx, gy, gz, mx, my, mz; // variables to hold latest sensor data values 
-	double temperature;
+
+  const double PI = atan(1) * 4;
+	double yaw, pitch, roll;
+	double deltat = 0.0f;                      // integration interval for both filter schemes
+  volatile uint32_t lastUpdate = tim3GetUs();
+  volatile uint32_t Now = 0; // used to calculate integration interval                               // used to calculate integration interval
 
   while (1)
   {
-    HAL_Delay(250);
     if(MPU_9255_isDataReady(nmpu)) {  							// On interrupt, check if data ready interrupt
 			MPU_9255_readAccelData(nmpu, &ax, &ay, &az);  	// Read the accel x/y/z adc values  
 			MPU_9255_readGyroData(nmpu, &gx, &gy, &gz);  	// Read the gyro x/y/z adc values
 			MPU_9255_readMagData(nmpu, &mx, &my, &mz);  		// Read the mag x/y/z adc values
-      temperature = MPU_9255_readTempData(nmpu);  // Read the adc values
+      Now = tim3GetUs();
+      deltat = ((double)(Now - lastUpdate))/1000000.0f ; // set integration time by time elapsed since last filter update
+      lastUpdate = Now;
 
-      printf(" ax = %f, ay = %f, az = %f  mg\n\r", 1000.0f*ax, 1000.0f*ay, 1000.0f*az); 			
-      printf(" gx = %f, gy = %f, gz = %f  deg/s\n\r", gx, gy, gz); 			
-      printf(" mx = %f, my = %f, mz = %f  mG\n\r", mx, my, mz); 
-  		printf(" temperature = %f  C\n\r\n\r", temperature); 
+      MPU_9255_filterUpdate(nmpu, gx*PI/180.0f, gy*PI/180.0f, gz*PI/180.0f, ax, ay, az, deltat);
+			MPU_9255_getEulerDegreeFilter(nmpu, &yaw, &pitch, &roll);
+      printf("Orientation: %f %f %f\n\r", yaw, pitch, roll);
 		}
     /* USER CODE END WHILE */
 

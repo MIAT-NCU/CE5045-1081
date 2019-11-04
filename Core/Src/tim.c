@@ -21,6 +21,7 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
+uint32_t tim3Counter = 0;
 
 /* USER CODE END 0 */
 
@@ -96,6 +97,15 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 } 
 
 /* USER CODE BEGIN 1 */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+  if(htim == &htim3){
+    tim3Counter++;
+  }
+}
+
+uint32_t tim3GetUs(void){
+  return tim3Counter * 1000 + __HAL_TIM_GET_COUNTER(&htim3);
+}
 
 /* USER CODE END 1 */
 
