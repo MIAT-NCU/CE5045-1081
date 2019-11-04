@@ -262,11 +262,11 @@ double MPU_9255_calcMagHorizontal(double mx, double my){
 }
 
 double MPU_9255_calcMagInclination(double mx, double my, double mz){
-  return arctan( mz / MPU_9255_calcMagHorizontal(mx,my) );
+  return atan( mz / MPU_9255_calcMagHorizontal(mx,my) );
 }
 
 double MPU_9255_calcMagDeclination(double mx, double my){
-  return arctan( my / mx );
+  return atan( my / mx );
 }
 
 void resetMPU9255(MPU_9255_t *hmpu ) {
