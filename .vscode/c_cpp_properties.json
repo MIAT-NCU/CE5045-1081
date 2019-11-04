@@ -1,6 +1,7 @@
 {
     "env": {
         "cubemx_includes": [
+            "Lib/MPU_9255",
             "Core/Inc",
             "../../Repository/STM32Cube_FW_H7_V1.5.0/Drivers/STM32H7xx_HAL_Driver/Inc",
             "../../Repository/STM32Cube_FW_H7_V1.5.0/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy",

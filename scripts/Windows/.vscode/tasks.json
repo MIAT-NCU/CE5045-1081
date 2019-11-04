@@ -48,12 +48,14 @@
         {
             "label": "CPU: Build, Download and run",
             "type": "shell",
-            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd.exe",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-20191003/bin/openocd.exe",
             "args": [
+                "-s",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-20191003",
                 "-f",
-                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
+                "interface/stlink.cfg",
                 "-f",
-                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/target/stm32h7x_dual_bank.cfg",
+                "target/stm32h7x_dual_bank.cfg",
                 "-c",
                 "program ../../build/target.elf verify reset exit"
             ],
@@ -63,12 +65,14 @@
         {
             "label": "CPU: Download and run",
             "type": "shell",
-            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd.exe",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-20191003/bin/openocd.exe",
             "args": [
+                "-s",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-20191003",
                 "-f",
-                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
+                "interface/stlink.cfg",
                 "-f",
-                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/target/stm32h7x_dual_bank.cfg",
+                "target/stm32h7x_dual_bank.cfg",
                 "-c",
                 "program ../../build/target.elf verify reset exit"
             ],
@@ -77,12 +81,14 @@
         {
             "label": "CPU: Reset and run",
             "type": "shell",
-            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd.exe",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-20191003/bin/openocd.exe",
             "args": [
+                "-s",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-20191003",
                 "-f",
-                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
+                "interface/stlink.cfg",
                 "-f",
-                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/target/stm32h7x_dual_bank.cfg",
+                "target/stm32h7x_dual_bank.cfg",
                 "-c init",
                 "-c reset",
                 "-c exit"
@@ -92,12 +98,14 @@
         {
             "label": "CPU: Halt",
             "type": "shell",
-            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd.exe",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-20191003/bin/openocd.exe",
             "args": [
+                "-s",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-20191003",
                 "-f",
-                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
+                "interface/stlink.cfg",
                 "-f",
-                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/target/stm32h7x_dual_bank.cfg",
+                "target/stm32h7x_dual_bank.cfg",
                 "-c init",
                 "-c halt",
                 "-c exit"
@@ -107,12 +115,14 @@
         {
             "label": "CPU: Run",
             "type": "shell",
-            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/bin/openocd.exe",
+            "command": "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-20191003/bin/openocd.exe",
             "args": [
+                "-s",
+                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-20191003",
                 "-f",
-                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/interface/stlink.cfg",
+                "interface/stlink.cfg",
                 "-f",
-                "${workspaceFolder}/../../../../toolchain/openocd/0.10.0-12-20190422-2015/scripts/target/stm32h7x_dual_bank.cfg",
+                "target/stm32h7x_dual_bank.cfg",
                 "-c init",
                 "-c resume",
                 "-c exit"

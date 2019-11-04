@@ -20,9 +20,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "eth.h"
+#include "i2c.h"
+#include "spi.h"
+#include "tim.h"
 #include "usart.h"
-#include "usb_otg.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -95,67 +96,6 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-/**
-  * @brief 回傳一個介於0.5~-0.5的變化量
-  * @retval 變化量
-  */
-double sensorVariation(){
-  double inc = rand();
-  inc = (inc / RAND_MAX) - 0.5;
-  return inc;
-}
-
-/**
-  * @brief 讀取感應器數值
-  * @retval 數值
-  */
-double getSensorReading(){
-  static double value = 0;
-  value += sensorVariation();
-  return value;
-}
-
-/**
-  * @brief 捕捉按鈕的變化及狀態
-  * @retval 按鈕的變化及狀態
-  */
-buttonState_t getButtonState(){
-  static GPIO_PinState prevState = 3;
-  buttonState_t result = {
-    notChange,
-    buttonUp
-  };
-
-  GPIO_PinState newState = HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin);
-  result.state = (btnSt_t) newState;
-
-  if(prevState != newState && prevState != 3){
-    result.isChange = isChanged;
-  }
-
-  prevState = newState;
-  return result;
-}
-
-/**
-  * @brief 回報按鈕變化及狀態
-  * @btnSt 按鈕狀態 
-  * @retval None
-  */
-void reportButtonState(buttonState_t btnSt){
-  switch(btnSt.state){
-    case(buttonDown):
-      printf("Button pressed!\r\n");
-      break;
-    case(buttonUp):
-      printf("Button released!\r\n");
-      break;
-    default:
-      printf("Button Exception occured!!!!!!!!!!\r\n");
-      break;
-  }
-}
-
 /* USER CODE END 0 */
 
 /**
@@ -167,7 +107,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
-
+  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -187,50 +127,19 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_ETH_Init();
   MX_USART3_UART_Init();
-  MX_USB_OTG_FS_PCD_Init();
+  MX_I2C1_Init();
+  MX_TIM3_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  printf("Hello World~~\r\n");
-
-  uint8_t msgCounter=0;
-  uint8_t ld1Counter=0;
-  uint16_t msgPauseRemaining = 0;
-  
   while (1)
   {
-    //回報感應器讀值
-    if(msgPauseRemaining>0){
-      msgPauseRemaining--;
-    }else{
-      if(msgCounter++>50){
-        msgCounter=0;
-        printf("Sensor Readings : % 2.2f \r\n", getSensorReading() );
-      }
-    }
-
-    //閃爍LED燈
-    if(ld1Counter++>20){
-      ld1Counter=0;
-      HAL_GPIO_TogglePin(LD2_GPIO_Port,LD2_Pin);
-    }
-
-    //按鈕狀態判斷及回報
-    buttonState_t btnState = getButtonState();
-    if(btnState.isChange == isChanged){
-      msgPauseRemaining = 100;
-      HAL_GPIO_WritePin( LD3_GPIO_Port, LD3_Pin, (GPIO_PinState) btnState.state);
-      reportButtonState(btnState);
-    }
-
-    HAL_Delay(10);
-
-    /* USER CODE END WHILE */
+     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
@@ -261,12 +170,12 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 1;
-  RCC_OscInitStruct.PLL.PLLN = 24;
+  RCC_OscInitStruct.PLL.PLLM = 2;
+  RCC_OscInitStruct.PLL.PLLN = 100;
   RCC_OscInitStruct.PLL.PLLP = 2;
   RCC_OscInitStruct.PLL.PLLQ = 4;
   RCC_OscInitStruct.PLL.PLLR = 2;
-  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_3;
+  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -280,26 +189,25 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_D3PCLK1|RCC_CLOCKTYPE_D1PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV1;
-  RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV1;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
+  RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();
   }
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_USB;
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_SPI1
+                              |RCC_PERIPHCLK_I2C1;
+  PeriphClkInitStruct.Spi123ClockSelection = RCC_SPI123CLKSOURCE_PLL;
   PeriphClkInitStruct.Usart234578ClockSelection = RCC_USART234578CLKSOURCE_D2PCLK1;
-  PeriphClkInitStruct.UsbClockSelection = RCC_USBCLKSOURCE_PLL;
+  PeriphClkInitStruct.I2c123ClockSelection = RCC_I2C123CLKSOURCE_D2PCLK1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
     Error_Handler();
   }
-  /** Enable USB Voltage detector 
-  */
-  HAL_PWREx_EnableUSBVoltageDetector();
 }
 
 /* USER CODE BEGIN 4 */
