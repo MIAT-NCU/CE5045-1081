@@ -253,6 +253,21 @@ double MPU_9255_readTempData(MPU_9255_t *hmpu)
   return ((double) tempCount) / 333.87f + 21.0f;  // Temperature in degrees Centigrade
 }
 
+double MPU_9255_calcMagForce(double mx, double my, double mz){
+  return pow(mx * mx + my * my + mz * mz, 0.5);
+}
+
+double MPU_9255_calcMagHorizontal(double mx, double my){
+  return pow(mx * mx + my * my, 0.5);
+}
+
+double MPU_9255_calcMagInclination(double mx, double my, double mz){
+  return arctan( mz / MPU_9255_calcMagHorizontal(mx,my) );
+}
+
+double MPU_9255_calcMagDeclination(double mx, double my){
+  return arctan( my / mx );
+}
 
 void resetMPU9255(MPU_9255_t *hmpu ) {
   // reset device

@@ -98,7 +98,11 @@ void        MPU_9255_readMagData(MPU_9255_t *hmpu, double *mx, double *my, doubl
 void        MPU_9255_filterUpdate(MPU_9255_t *hmpu, double gx, double gy, double gz, 
                                           double ax, double ay, double az, double deltat);
 void        MPU_9255_getEulerDegreeFilter(MPU_9255_t *hmpu, double *yaw, double *pitch, double *roll);
-double       MPU_9255_readTempData(MPU_9255_t *hmpu);
+double      MPU_9255_readTempData(MPU_9255_t *hmpu);
+double      MPU_9255_calcMagForce(double mx, double my, double mz);
+double      MPU_9255_calcMagHorizontal(double mx, double my);
+double      MPU_9255_calcMagInclination(double mx, double my, double mz);
+double      MPU_9255_calcMagDeclination(double mx, double my);
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions prototypes ---------------------------------------------*/
